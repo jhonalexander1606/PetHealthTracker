@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetHealth - Formulario de Mascota</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-pet">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="menu.html"><i class="bi bi-heart-pulse-fill"></i> PetHealth Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarMenu">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="menu.html"><i class="bi bi-house"></i> Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="usuarios.html"><i class="bi bi-people"></i> Usuarios</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="mascotas.html"><i class="bi bi-github"></i> Mascotas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="eventos.html"><i class="bi bi-clipboard2-pulse"></i> Eventos Medicos</a></li>
+                </ul>
+                <button class="btn-logout" onclick="sessionStorage.clear(); window.location='index.html'">
+                    <i class="bi bi-box-arrow-right"></i> Salir
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="section-card">
+            <div class="page-header">
+                <div>
+                    <h2 class="page-title"><i class="bi bi-github"></i> <span id="formTitle">Nueva Mascota</span></h2>
+                    <p class="page-subtitle">Registre la ficha sanitaria basica (HU006)</p>
+                </div>
+            </div>
+
+            <div id="alertBox"></div>
+
+            <form class="form-pet" id="mascotaForm">
+                <input type="hidden" id="mascota-id">
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Dueno (Usuario) <span class="text-danger">*</span></label>
+                        <select class="form-select" id="mascota-usuario" required>
+                            <option value="">Seleccione el dueno...</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Nombre de la Mascota <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="mascota-nombre" required maxlength="100">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Especie <span class="text-danger">*</span></label>
+                        <select class="form-select" id="mascota-especie" required>
+                            <option value="">Seleccione...</option>
+                            <option value="Perro">Perro</option>
+                            <option value="Gato">Gato</option>
+                            <option value="Ave">Ave</option>
+                            <option value="Conejo">Conejo</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Raza</label>
+                        <input type="text" class="form-control" id="mascota-raza" maxlength="100">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Edad (anos) <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="mascota-edad" required min="0" max="40">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Sexo</label>
+                        <select class="form-select" id="mascota-sexo">
+                            <option value="">Sin especificar</option>
+                            <option value="Macho">Macho</option>
+                            <option value="Hembra">Hembra</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Peso (kg)</label>
+                        <input type="number" step="0.1" class="form-control" id="mascota-peso" min="0" max="200">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Color</label>
+                        <input type="text" class="form-control" id="mascota-color" maxlength="50">
+                    </div>
+                </div>
+
+                <div class="form-footer">
+                    <button type="button" class="btn-primary-pet" onclick="guardarMascota()">
+                        <i class="bi bi-save"></i> Guardar
+                    </button>
+                    <button type="button" class="btn-secondary-pet" onclick="window.location='mascotas.html'">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="js/request.js"></script>
+    <script src="js/mascotas.js"></script>
+    <script>
+        window.onload = function () {
+            cargarUsuariosCombo();
+            const idEditar = sessionStorage.getItem('mascotaEditar');
+            if (idEditar) {
+                document.getElementById('formTitle').textContent = 'Editar Mascota';
+                setTimeout(function () { cargarMascotaParaEditar(idEditar); }, 300);
+            }
+        };
+    </script>
+</body>
+</html>

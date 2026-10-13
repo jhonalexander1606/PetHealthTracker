@@ -1,0 +1,67 @@
+# ===================================================================
+# .gitignore - PetHealth Tracker
+# ===================================================================
+
+# -------- Java / Maven --------
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+replay_pid*
+
+# -------- NetBeans --------
+nbproject/private/
+nbbuild/
+nbdist/
+.nb-gradle/
+build/
+nb-configuration.xml
+nbactions.xml
+
+# -------- Eclipse / STS --------
+.classpath
+.project
+.settings/
+.factorypath
+.apt_generated/
+.springBeans
+.sts4-cache/
+
+# -------- IntelliJ IDEA --------
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# -------- VS Code --------
+.vscode/
+*.code-workspace
+
+# -------- Logs y temporales --------
+*.log
+*.tmp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+
+# -------- Spring Boot --------
+HELP.md
+mvnw
+mvnw.cmd
+.mvn/
+
+# -------- Base de datos local --------
+*.sqlite
+*.db
+dump*.sql
+
+# -------- Variables de entorno sensibles --------
+.env
+application-local.properties
+
+docs/Guion_Sustentacion.md
+docs/INSTRUCCIONES_INSTALACION.md

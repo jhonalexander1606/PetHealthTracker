@@ -1,0 +1,92 @@
+/* ===================================================================
+   PetHealth Tracker - estilos de la pantalla de login
+   Entornos de Programacion - UIS 2026-II - Grupo 02
+   =================================================================== */
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0d6b4f 0%, #16a085 50%, #58d68d 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-wrapper {
+    width: 100%;
+    max-width: 420px;
+    padding: 1.5rem;
+}
+
+.login-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: 2.5rem 2rem;
+    text-align: center;
+}
+
+.brand-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    background: linear-gradient(135deg, #16a085, #0d6b4f);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    box-shadow: 0 8px 20px rgba(22, 160, 133, 0.4);
+}
+
+.brand-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #0d6b4f;
+    margin: 0.5rem 0 0.2rem;
+    letter-spacing: -0.5px;
+}
+
+.brand-subtitle {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-floating label {
+    color: #7f8c8d;
+}
+
+.btn-login {
+    background: linear-gradient(135deg, #16a085, #0d6b4f);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem;
+    border-radius: 8px;
+    width: 100%;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(22, 160, 133, 0.4);
+    color: white;
+}
+
+.help-text {
+    font-size: 0.8rem;
+    color: #95a5a6;
+    margin-top: 1rem;
+}
+
+.footer-info {
+    text-align: center;
+    color: white;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
