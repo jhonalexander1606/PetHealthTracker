@@ -2,10 +2,11 @@
  * PetHealth Tracker - CRUD de Eventos Medicos (HU007)
  * ===================================================================== */
 
+// Guarda los eventos cargados (ya filtrados por rol) para poder buscar sobre ellos
+let eventosActuales = [];
+
 function loadData() {
     const request = sendRequest('api/eventos/list', 'GET', '');
-    const table = document.getElementById('evento-table');
-    table.innerHTML = '';
 
     request.onload = function () {
         let data = request.response;
@@ -16,34 +17,58 @@ function loadData() {
                 return e.mascota && e.mascota.usuario && e.mascota.usuario.id === idUsuario;
             });
         }
-        if (!data || data.length === 0) {
-            table.innerHTML = '<tr><td colspan="8" class="empty-state"><div class="icon"><i class="bi bi-inbox"></i></div>No hay eventos medicos registrados</td></tr>';
-            return;
-        }
-        data.forEach(function (e) {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${e.id}</td>
-                <td>${e.mascota ? '<strong>' + e.mascota.nombre + '</strong><br><small class="text-muted">' + e.mascota.especie + '</small>' : '-'}</td>
-                <td><span class="${badgeClase(e.tipoEvento)}">${e.tipoEvento}</span></td>
-                <td>${formatearFecha(e.fechaAplicacion)}</td>
-                <td>${e.veterinariaClinica || '-'}</td>
-                <td>${e.veterinario || '-'}</td>
-                <td>${e.fechaProximaDosis ? '<i class="bi bi-bell"></i> ' + formatearFecha(e.fechaProximaDosis) : '-'}</td>
-                <td>
-                    <div class="actions">
-                        <button class="btn-sm-pet btn-edit" onclick="editarEvento(${e.id})" title="Editar"><i class="bi bi-pencil"></i></button>
-                        <button class="btn-sm-pet btn-delete" onclick="eliminarEvento(${e.id})" title="Eliminar"><i class="bi bi-trash"></i></button>
-                    </div>
-                </td>
-            `;
-            table.appendChild(tr);
-        });
+        eventosActuales = data || [];
+        renderEventos(eventosActuales);
     };
 
     request.onerror = function () {
-        table.innerHTML = '<tr><td colspan="8" class="text-center text-danger">Error al cargar los eventos</td></tr>';
+        document.getElementById('evento-table').innerHTML =
+            '<tr><td colspan="8" class="text-center text-danger">Error al cargar los eventos</td></tr>';
     };
+}
+
+// Pinta una lista de eventos en la tabla
+function renderEventos(lista) {
+    const table = document.getElementById('evento-table');
+    table.innerHTML = '';
+
+    if (!lista || lista.length === 0) {
+        table.innerHTML = '<tr><td colspan="8" class="empty-state"><div class="icon"><i class="bi bi-inbox"></i></div>No hay eventos medicos registrados</td></tr>';
+        return;
+    }
+    lista.forEach(function (e) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${e.id}</td>
+            <td>${e.mascota ? '<strong>' + e.mascota.nombre + '</strong><br><small class="text-muted">' + e.mascota.especie + '</small>' : '-'}</td>
+            <td><span class="${badgeClase(e.tipoEvento)}">${e.tipoEvento}</span></td>
+            <td>${formatearFecha(e.fechaAplicacion)}</td>
+            <td>${e.veterinariaClinica || '-'}</td>
+            <td>${e.veterinario || '-'}</td>
+            <td>${e.fechaProximaDosis ? '<i class="bi bi-bell"></i> ' + formatearFecha(e.fechaProximaDosis) : '-'}</td>
+            <td>
+                <div class="actions">
+                    <button class="btn-sm-pet btn-edit" onclick="editarEvento(${e.id})" title="Editar"><i class="bi bi-pencil"></i></button>
+                    <button class="btn-sm-pet btn-delete" onclick="eliminarEvento(${e.id})" title="Eliminar"><i class="bi bi-trash"></i></button>
+                </div>
+            </td>
+        `;
+        table.appendChild(tr);
+    });
+}
+
+// Busca (filtra) por mascota o tipo de evento sobre los eventos ya cargados
+function buscarEvento() {
+    const texto = document.getElementById('buscarEvento').value.trim().toLowerCase();
+    if (!texto) {
+        renderEventos(eventosActuales);
+        return;
+    }
+    const filtrados = eventosActuales.filter(function (e) {
+        return (e.mascota && e.mascota.nombre && e.mascota.nombre.toLowerCase().includes(texto)) ||
+               (e.tipoEvento && e.tipoEvento.toLowerCase().includes(texto));
+    });
+    renderEventos(filtrados);
 }
 
 function badgeClase(tipo) {

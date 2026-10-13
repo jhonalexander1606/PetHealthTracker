@@ -42,9 +42,12 @@
                     <h2 class="page-title"><i class="bi bi-github"></i> Gestion de Mascotas</h2>
                     <p class="page-subtitle">Ficha sanitaria de perros, gatos y demas mascotas </p>
                 </div>
-                <button class="btn-primary-pet" onclick="window.location='form_mascotas.html'">
-                    <i class="bi bi-plus-circle"></i> Nueva Mascota
-                </button>
+                <div class="d-flex gap-2">
+                    <input type="text" class="form-control" id="buscarMascota" placeholder="Buscar por nombre o especie..." style="width: 240px;" oninput="buscarMascota()">
+                    <button class="btn-primary-pet" onclick="window.location='form_mascotas.html'">
+                        <i class="bi bi-plus-circle"></i> Nueva Mascota
+                    </button>
+                </div>
             </div>
 
             <div id="alertBox"></div>

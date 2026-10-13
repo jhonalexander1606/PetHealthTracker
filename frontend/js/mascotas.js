@@ -2,10 +2,11 @@
  * PetHealth Tracker - CRUD de Mascotas (HU006)
  * ===================================================================== */
 
+// Guarda las mascotas cargadas (ya filtradas por rol) para poder buscar sobre ellas
+let mascotasActuales = [];
+
 function loadData() {
     const request = sendRequest('api/mascotas/list', 'GET', '');
-    const table = document.getElementById('mascota-table');
-    table.innerHTML = '';
 
     request.onload = function () {
         let data = request.response;
@@ -16,35 +17,59 @@ function loadData() {
                 return m.usuario && m.usuario.id === idUsuario;
             });
         }
-        if (!data || data.length === 0) {
-            table.innerHTML = '<tr><td colspan="9" class="empty-state"><div class="icon"><i class="bi bi-inbox"></i></div>No hay mascotas registradas</td></tr>';
-            return;
-        }
-        data.forEach(function (m) {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${m.id}</td>
-                <td><strong>${m.nombre}</strong></td>
-                <td>${iconoEspecie(m.especie)} ${m.especie}</td>
-                <td>${m.raza || '-'}</td>
-                <td>${m.edad} ${m.edad === 1 ? 'ano' : 'anos'}</td>
-                <td>${m.sexo || '-'}</td>
-                <td>${m.peso ? m.peso + ' kg' : '-'}</td>
-                <td>${m.usuario ? m.usuario.nombreCompleto + '<br><small class="text-muted"><i class="bi bi-telephone"></i> ' + (m.usuario.telefono || 'sin telefono') + '</small>' : '-'}</td>
-                <td>
-                    <div class="actions">
-                        <button class="btn-sm-pet btn-edit" onclick="editarMascota(${m.id})" title="Editar"><i class="bi bi-pencil"></i></button>
-                        <button class="btn-sm-pet btn-delete" onclick="eliminarMascota(${m.id})" title="Eliminar"><i class="bi bi-trash"></i></button>
-                    </div>
-                </td>
-            `;
-            table.appendChild(tr);
-        });
+        mascotasActuales = data || [];
+        renderMascotas(mascotasActuales);
     };
 
     request.onerror = function () {
-        table.innerHTML = '<tr><td colspan="9" class="text-center text-danger">Error al cargar las mascotas</td></tr>';
+        document.getElementById('mascota-table').innerHTML =
+            '<tr><td colspan="9" class="text-center text-danger">Error al cargar las mascotas</td></tr>';
     };
+}
+
+// Pinta una lista de mascotas en la tabla
+function renderMascotas(lista) {
+    const table = document.getElementById('mascota-table');
+    table.innerHTML = '';
+
+    if (!lista || lista.length === 0) {
+        table.innerHTML = '<tr><td colspan="9" class="empty-state"><div class="icon"><i class="bi bi-inbox"></i></div>No hay mascotas registradas</td></tr>';
+        return;
+    }
+    lista.forEach(function (m) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${m.id}</td>
+            <td><strong>${m.nombre}</strong></td>
+            <td>${iconoEspecie(m.especie)} ${m.especie}</td>
+            <td>${m.raza || '-'}</td>
+            <td>${m.edad} ${m.edad === 1 ? 'ano' : 'anos'}</td>
+            <td>${m.sexo || '-'}</td>
+            <td>${m.peso ? m.peso + ' kg' : '-'}</td>
+            <td>${m.usuario ? m.usuario.nombreCompleto + '<br><small class="text-muted"><i class="bi bi-telephone"></i> ' + (m.usuario.telefono || 'sin telefono') + '</small>' : '-'}</td>
+            <td>
+                <div class="actions">
+                    <button class="btn-sm-pet btn-edit" onclick="editarMascota(${m.id})" title="Editar"><i class="bi bi-pencil"></i></button>
+                    <button class="btn-sm-pet btn-delete" onclick="eliminarMascota(${m.id})" title="Eliminar"><i class="bi bi-trash"></i></button>
+                </div>
+            </td>
+        `;
+        table.appendChild(tr);
+    });
+}
+
+// Busca (filtra) por nombre o especie sobre las mascotas ya cargadas
+function buscarMascota() {
+    const texto = document.getElementById('buscarMascota').value.trim().toLowerCase();
+    if (!texto) {
+        renderMascotas(mascotasActuales);
+        return;
+    }
+    const filtradas = mascotasActuales.filter(function (m) {
+        return (m.nombre && m.nombre.toLowerCase().includes(texto)) ||
+               (m.especie && m.especie.toLowerCase().includes(texto));
+    });
+    renderMascotas(filtradas);
 }
 
 function iconoEspecie(especie) {

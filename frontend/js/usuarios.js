@@ -2,24 +2,33 @@
  * PetHealth Tracker - CRUD de Usuarios (HU002, HU003, HU004, HU005)
  * ===================================================================== */
 
+// Guarda los usuarios cargados para poder buscar sobre ellos
+let usuariosActuales = [];
+
 // ---------- LISTAR ----------
 function loadData() {
     const request = sendRequest('api/usuarios/list', 'GET', '');
-    const table = document.getElementById('usuario-table');
-    table.innerHTML = '';
 
     request.onload = function () {
-        const data = request.response;
-        if (!data || data.length === 0) {
-            table.innerHTML = '<tr><td colspan="7" class="empty-state"><div class="icon"><i class="bi bi-inbox"></i></div>No hay usuarios registrados</td></tr>';
-            return;
-        }
-        data.forEach(function (u) { renderRow(u); });
+        usuariosActuales = request.response || [];
+        renderUsuarios(usuariosActuales);
     };
 
     request.onerror = function () {
-        table.innerHTML = '<tr><td colspan="7" class="text-center text-danger">Error al cargar los usuarios. Verifique el backend.</td></tr>';
+        document.getElementById('usuario-table').innerHTML =
+            '<tr><td colspan="7" class="text-center text-danger">Error al cargar los usuarios. Verifique el backend.</td></tr>';
     };
+}
+
+// Pinta una lista de usuarios en la tabla
+function renderUsuarios(lista) {
+    const table = document.getElementById('usuario-table');
+    table.innerHTML = '';
+    if (!lista || lista.length === 0) {
+        table.innerHTML = '<tr><td colspan="7" class="empty-state"><div class="icon"><i class="bi bi-inbox"></i></div>No hay usuarios registrados</td></tr>';
+        return;
+    }
+    lista.forEach(function (u) { renderRow(u); });
 }
 
 function renderRow(u) {
@@ -46,26 +55,19 @@ function renderRow(u) {
     table.appendChild(tr);
 }
 
-// ---------- BUSCAR POR CEDULA (HU003) ----------
-function buscarPorCedula() {
-    const cedula = document.getElementById('buscarCedula').value.trim();
-    if (!cedula) { loadData(); return; }
-
-    const request = sendRequest('api/usuarios/cedula/' + cedula, 'GET', '');
-    const table = document.getElementById('usuario-table');
-    table.innerHTML = '';
-
-    request.onload = function () {
-        const data = request.response;
-        if (data && data.Usuario) {
-            renderRow(data.Usuario);
-        } else {
-            table.innerHTML = '<tr><td colspan="7" class="empty-state"><div class="icon"><i class="bi bi-search"></i></div>No se encontro ningun usuario con esa cedula</td></tr>';
-        }
-    };
-    request.onerror = function () {
-        table.innerHTML = '<tr><td colspan="7" class="text-center text-danger">Error al buscar</td></tr>';
-    };
+// ---------- BUSCAR POR CEDULA O NOMBRE (HU003) ----------
+// Filtra en el navegador sobre los usuarios ya cargados.
+function buscarUsuario() {
+    const texto = document.getElementById('buscarCedula').value.trim().toLowerCase();
+    if (!texto) {
+        renderUsuarios(usuariosActuales);
+        return;
+    }
+    const filtrados = usuariosActuales.filter(function (u) {
+        return (u.numeroDocumento && u.numeroDocumento.toLowerCase().includes(texto)) ||
+               (u.nombreCompleto && u.nombreCompleto.toLowerCase().includes(texto));
+    });
+    renderUsuarios(filtrados);
 }
 
 // ---------- EDITAR ----------

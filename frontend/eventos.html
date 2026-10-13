@@ -42,9 +42,12 @@
                     <h2 class="page-title"><i class="bi bi-clipboard2-pulse-fill"></i> Historial Medico</h2>
                     <p class="page-subtitle">Vacunas, consultas, desparasitaciones y recordatorios </p>
                 </div>
-                <button class="btn-primary-pet" onclick="window.location='form_eventos.html'">
-                    <i class="bi bi-plus-circle"></i> Nuevo Evento
-                </button>
+                <div class="d-flex gap-2">
+                    <input type="text" class="form-control" id="buscarEvento" placeholder="Buscar por mascota o tipo..." style="width: 240px;" oninput="buscarEvento()">
+                    <button class="btn-primary-pet" onclick="window.location='form_eventos.html'">
+                        <i class="bi bi-plus-circle"></i> Nuevo Evento
+                    </button>
+                </div>
             </div>
 
             <div id="alertBox"></div>
