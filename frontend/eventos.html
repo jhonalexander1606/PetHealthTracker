@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <!--
-    PetHealth Tracker - Listado de Eventos Medicos (CRUD de Juan Diego Tellez)
-    HU007 - Registro de eventos medicos con fecha de proxima dosis
+    PetHealth Tracker - Listado de Eventos Médicos (CRUD de Juan Diego Tellez)
+    HU007 - Registro de eventos médicos con fecha de proxima dosis
 -->
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PetHealth - Eventos Medicos</title>
+    <title>PetHealth - Eventos Médicos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -26,7 +26,7 @@
                     <li class="nav-item"><a class="nav-link" href="menu.html"><i class="bi bi-house"></i> Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="usuarios.html"><i class="bi bi-people"></i> Usuarios</a></li>
                     <li class="nav-item"><a class="nav-link" href="mascotas.html"><i class="bi bi-github"></i> Mascotas</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="eventos.html"><i class="bi bi-clipboard2-pulse"></i> Eventos Medicos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="eventos.html"><i class="bi bi-clipboard2-pulse"></i> Eventos Médicos</a></li>
                 </ul>
                 <button class="btn-logout" onclick="sessionStorage.clear(); window.location='index.html'">
                     <i class="bi bi-box-arrow-right"></i> Salir
@@ -36,15 +36,17 @@
     </nav>
 
     <div class="main-container">
-        <div class="section-card">
+
+        <!-- ============ VISTA 1: una fila por mascota ============ -->
+        <div class="section-card" id="vista-mascotas">
             <div class="page-header">
                 <div>
-                    <h2 class="page-title"><i class="bi bi-clipboard2-pulse-fill"></i> Historial Medico</h2>
-                    <p class="page-subtitle">Vacunas, consultas, desparasitaciones y recordatorios </p>
+                    <h2 class="page-title"><i class="bi bi-clipboard2-pulse-fill"></i> Historial Médico</h2>
+                    <p class="page-subtitle">Seleccione una mascota para ver su historial completo</p>
                 </div>
                 <div class="d-flex gap-2">
-                    <input type="text" class="form-control" id="buscarEvento" placeholder="Buscar por mascota o tipo..." style="width: 240px;" oninput="buscarEvento()">
-                    <button class="btn-primary-pet" onclick="window.location='form_eventos.html'">
+                    <input type="text" class="form-control" id="buscarMascotaHist" placeholder="Buscar mascota o dueño..." style="width: 240px;" oninput="buscarResumen()">
+                    <button class="btn-primary-pet" onclick="nuevoEventoGeneral()">
                         <i class="bi bi-plus-circle"></i> Nuevo Evento
                     </button>
                 </div>
@@ -56,17 +58,75 @@
                 <table class="table-pet">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Mascota</th>
+                            <th>Especie</th>
+                            <th>Due&ntilde;o</th>
+                            <th>Eventos</th>
+                            <th>&Uacute;ltimo evento</th>
+                            <th>Pr&oacute;xima dosis</th>
+                            <th>Historial</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resumen-table">
+                        <tr><td colspan="7" class="text-center text-muted py-4">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ============ VISTA 2: historial de UNA mascota ============ -->
+        <div class="section-card" id="vista-historial" style="display: none;">
+            <div class="page-header">
+                <div>
+                    <h2 class="page-title"><i class="bi bi-clipboard2-pulse"></i> <span id="historial-titulo">Historial</span></h2>
+                    <p class="page-subtitle" id="historial-subtitulo"></p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn-secondary-pet" onclick="volverAMascotas()">
+                        <i class="bi bi-arrow-left"></i> Volver
+                    </button>
+                    <button class="btn-primary-pet" onclick="nuevoEventoParaMascota()">
+                        <i class="bi bi-plus-circle"></i> Nuevo Evento
+                    </button>
+                </div>
+            </div>
+
+            <div id="alertBoxHistorial"></div>
+
+            <!-- Filtro por rango de fechas -->
+            <div class="d-flex gap-2 align-items-end flex-wrap mb-3">
+                <div>
+                    <label class="form-label mb-1" for="filtroDesde"><small><i class="bi bi-calendar-event"></i> Desde</small></label>
+                    <input type="date" class="form-control" id="filtroDesde" style="width: 170px;" onchange="filtrarHistorial()">
+                </div>
+                <div>
+                    <label class="form-label mb-1" for="filtroHasta"><small><i class="bi bi-calendar-check"></i> Hasta</small></label>
+                    <input type="date" class="form-control" id="filtroHasta" style="width: 170px;" onchange="filtrarHistorial()">
+                </div>
+                <button class="btn-secondary-pet" onclick="filtroUltimoAnio()">
+                    <i class="bi bi-clock-history"></i> &Uacute;ltimo a&ntilde;o
+                </button>
+                <button class="btn-secondary-pet" onclick="limpiarFiltroFechas()">
+                    <i class="bi bi-x-circle"></i> Limpiar
+                </button>
+                <span class="text-muted ms-2" id="contadorHistorial"></span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table-pet">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
                             <th>Tipo de Evento</th>
-                            <th>Fecha Aplicacion</th>
+                            <th>Fecha de Aplicación</th>
                             <th>Veterinaria</th>
                             <th>Veterinario</th>
-                            <th>Proxima Dosis</th>
+                            <th>Notas</th>
+                            <th>Próxima Dosis</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="evento-table">
+                    <tbody id="historial-table">
                         <tr><td colspan="8" class="text-center text-muted py-4">Cargando...</td></tr>
                     </tbody>
                 </table>

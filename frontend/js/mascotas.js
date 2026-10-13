@@ -43,10 +43,10 @@ function renderMascotas(lista) {
             <td><strong>${m.nombre}</strong></td>
             <td>${iconoEspecie(m.especie)} ${m.especie}</td>
             <td>${m.raza || '-'}</td>
-            <td>${m.edad} ${m.edad === 1 ? 'ano' : 'anos'}</td>
+            <td>${m.edad} ${m.edad === 1 ? 'a\u00f1o' : 'a\u00f1os'}</td>
             <td>${m.sexo || '-'}</td>
             <td>${m.peso ? m.peso + ' kg' : '-'}</td>
-            <td>${m.usuario ? m.usuario.nombreCompleto + '<br><small class="text-muted"><i class="bi bi-telephone"></i> ' + (m.usuario.telefono || 'sin telefono') + '</small>' : '-'}</td>
+            <td>${m.usuario ? m.usuario.nombreCompleto + '<br><small class="text-muted"><i class="bi bi-telephone"></i> ' + (m.usuario.telefono || 'sin teléfono') + '</small>' : '-'}</td>
             <td>
                 <div class="actions">
                     <button class="btn-sm-pet btn-edit" onclick="editarMascota(${m.id})" title="Editar"><i class="bi bi-pencil"></i></button>
@@ -110,7 +110,7 @@ function guardarMascota() {
     const id = document.getElementById('mascota-id').value;
     const idUsuario = document.getElementById('mascota-usuario').value;
 
-    if (!idUsuario) { mostrarAlerta('Seleccione el dueno', 'danger'); return; }
+    if (!idUsuario) { mostrarAlerta('Seleccione el dueño', 'danger'); return; }
 
     const mascota = {
         usuario: { id: parseInt(idUsuario) },
@@ -143,23 +143,23 @@ function guardarMascota() {
         }
     };
     request.onerror = function () {
-        mostrarAlerta('Error de conexion con el servidor', 'danger');
+        mostrarAlerta('Error de conexión con el servidor', 'danger');
     };
 }
 
 function eliminarMascota(id) {
-    if (!confirm('Esta seguro de eliminar esta mascota? Se eliminaran tambien sus eventos medicos asociados.')) return;
+    if (!confirm('¿Está seguro de eliminar esta mascota? Se eliminarán también sus eventos médicos asociados.')) return;
     const request = sendRequest('api/mascotas/delete/' + id, 'DELETE', '');
     request.onload = function () {
         if (request.status >= 200 && request.status < 300) {
             mostrarAlerta('Mascota eliminada correctamente', 'success');
             loadData();
         } else {
-            mostrarAlerta('Error al eliminar la mascota (puede tener eventos medicos asociados)', 'danger');
+            mostrarAlerta('Error al eliminar la mascota (puede tener eventos médicos asociados)', 'danger');
         }
     };
     request.onerror = function () {
-        mostrarAlerta('Error de conexion', 'danger');
+        mostrarAlerta('Error de conexión', 'danger');
     };
 }
 
@@ -179,7 +179,7 @@ function cargarUsuariosCombo() {
         return;
     }
 
-    // ADMIN y VETERINARIO pueden elegir cualquier dueno
+    // ADMIN y VETERINARIO pueden elegir cualquier dueño
     const request = sendRequest('api/usuarios/list', 'GET', '');
     request.onload = function () {
         const data = request.response || [];
