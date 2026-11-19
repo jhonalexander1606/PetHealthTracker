@@ -8,7 +8,7 @@ Proyecto cliente-servidor con:
 - **Backend**: Spring Boot + JWT + MySQL
 - **Frontend**: React + Vite + Axios + Bootstrap
 
-### ✨ Funciones principales
+###  Funciones principales
 - Login con **JWT** y tres roles (ADMIN, VETERINARIO, DUENO); cada dueño solo ve sus mascotas.
 - **Dashboard** con indicadores, gráficas y **alertas de vacunas vencidas o próximas**.
 - **Pasaporte Sanitario Digital** por mascota, con **código QR**, línea de tiempo e impresión en PDF.
@@ -21,7 +21,7 @@ Detalle completo en [`docs/FUNCIONES_AVANZADAS.md`](docs/FUNCIONES_AVANZADAS.md)
 
 ---
 
-## 👥 Equipo
+##  Equipo
 
 | Integrante | Cédula | Rol | CRUD |
 |-----------|--------|-----|------|
@@ -31,7 +31,7 @@ Detalle completo en [`docs/FUNCIONES_AVANZADAS.md`](docs/FUNCIONES_AVANZADAS.md)
 
 ---
 
-## 📁 Estructura del proyecto
+##  Estructura del proyecto
 
 ```
 PetHealthTracker/
@@ -67,7 +67,7 @@ PetHealthTracker/
 
 ---
 
-## 🚀 Puesta en marcha (orden)
+##  Puesta en marcha (orden)
 
 ### 1. Base de datos — MySQL / MariaDB
 
@@ -108,7 +108,7 @@ Abre <http://localhost:5173>.
 
 ---
 
-## 🔐 Credenciales de prueba
+##  Credenciales de prueba
 
 | Usuario | Contraseña | Rol |
 |---------|-----------|-----|
@@ -140,7 +140,7 @@ Abre <http://localhost:5173>.
 
 ---
 
-## 🧭 Endpoints principales
+##  Endpoints principales
 
 Base URL: `http://localhost:8094`
 
@@ -162,7 +162,7 @@ Documentación interactiva completa: <http://localhost:8094/swagger-ui.html>
 
 ---
 
-## ☁️ Despliegue
+##  Despliegue
 
 El **frontend** se despliega en Vercel en 2 clicks (detecta Vite automáticamente). Guía completa en `frontend-react/INSTRUCCIONES_PASO_A_PASO.md`.
 
