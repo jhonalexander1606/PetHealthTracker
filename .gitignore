@@ -40,6 +40,10 @@ nbactions.xml
 .vscode/
 *.code-workspace
 
+# -------- Node / Vite (frontend-react) --------
+node_modules/
+dist/
+
 # -------- Logs y temporales --------
 *.log
 *.tmp

@@ -2,6 +2,8 @@ package uis.edu.entorno.pethealth.seguridad;
 
 import java.util.Arrays;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +32,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
  *     peticion se autentica con su token.
  *   - El codificador de contrasenas BCrypt.
  *   - La politica de CORS para que el frontend pueda consumir la API.
+ *   - Las respuestas de error de seguridad: 401 cuando no hay token valido y
+ *     403 cuando el token es valido pero el rol no tiene permiso.
  */
 @Configuration
 @EnableWebSecurity
@@ -64,6 +68,27 @@ public class SecurityConfig {
                 // El resto de la API requiere estar autenticado (cualquier rol)
                 .anyRequest().authenticated()
             )
+            // Respuestas de error de seguridad en JSON.
+            // Sin esto, Spring Security responderia 403 en ambos casos y no se
+            // podria distinguir "no estoy autenticado" de "no tengo permiso".
+            .exceptionHandling()
+                // 401 UNAUTHORIZED: no llego token, o el token es invalido/vencido
+                .authenticationEntryPoint((peticion, respuesta, excepcion) -> {
+                    respuesta.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    respuesta.setContentType("application/json;charset=UTF-8");
+                    respuesta.getWriter().write(
+                        "{\"Mensaje\":\"No autenticado: falta el token JWT, o es invalido o esta vencido\","
+                      + "\"statusCode\":401}");
+                })
+                // 403 FORBIDDEN: el token es valido, pero el rol no autoriza la operacion
+                .accessDeniedHandler((peticion, respuesta, excepcion) -> {
+                    respuesta.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    respuesta.setContentType("application/json;charset=UTF-8");
+                    respuesta.getWriter().write(
+                        "{\"Mensaje\":\"Acceso denegado: su rol no tiene permiso para esta operacion\","
+                      + "\"statusCode\":403}");
+                })
+                .and()
             // Se registra el filtro JWT antes del filtro estandar de usuario/clave
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

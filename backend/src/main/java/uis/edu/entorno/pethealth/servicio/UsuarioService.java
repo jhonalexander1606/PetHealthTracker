@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import uis.edu.entorno.pethealth.modelo.LoginDto;
 import uis.edu.entorno.pethealth.modelo.Usuario;
+import uis.edu.entorno.pethealth.repositorio.MascotaRepositorio;
 import uis.edu.entorno.pethealth.repositorio.UsuarioRepositorio;
+import uis.edu.entorno.pethealth.seguridad.UsuarioAutenticado;
 
 /**
  * Implementacion del servicio de Usuario (CRUD + Login).
@@ -30,6 +32,15 @@ public class UsuarioService implements IUsuarioService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private MascotaRepositorio mascotaRepositorio;
+
+    @Autowired
+    private UsuarioAutenticado usuarioAutenticado;
+
+    /** Roles validos del sistema. */
+    private static final List<String> ROLES = List.of("ADMIN", "VETERINARIO", "DUENO");
 
     // ----- CRUD -----
     @Override
@@ -87,13 +98,16 @@ public class UsuarioService implements IUsuarioService {
     public ResponseEntity<?> crear(Usuario usuario) {
         Map<String, Object> response = new HashMap<>();
         try {
-            // Validacion: nombre de usuario no debe estar repetido
-            Usuario existente = usuarioRepositorio.findByNombreUsuario(usuario.getNombreUsuario());
-            if (existente != null) {
-                response.put("Mensaje", "Alerta: el nombre de usuario '" + usuario.getNombreUsuario() + "' ya esta en uso");
-                response.put("Usuario", null);
-                response.put("statusCode", HttpStatus.CONFLICT.value());
-                return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+            // Validaciones de campos obligatorios y formato
+            String error = validarDatos(usuario, true);
+            if (error != null) {
+                return respuesta(response, error, HttpStatus.BAD_REQUEST);
+            }
+
+            // Validacion: nombre de usuario y documento no deben estar repetidos
+            String conflicto = validarDuplicados(usuario, null);
+            if (conflicto != null) {
+                return respuesta(response, conflicto, HttpStatus.CONFLICT);
             }
 
             // La contrasena se almacena cifrada con BCrypt (nunca en texto plano)
@@ -128,7 +142,26 @@ public class UsuarioService implements IUsuarioService {
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
 
+            String error = validarDatos(usuario, false);
+            if (error != null) {
+                return respuesta(response, error, HttpStatus.BAD_REQUEST);
+            }
+            String conflicto = validarDuplicados(usuario, id);
+            if (conflicto != null) {
+                return respuesta(response, conflicto, HttpStatus.CONFLICT);
+            }
+
             Usuario existente = opt.get();
+
+            // Un administrador no puede quitarse a si mismo el rol ADMIN
+            // (evita que el sistema se quede sin nadie que administre usuarios).
+            boolean esUnoMismo = existente.getNombreUsuario().equals(usuarioAutenticado.nombreUsuario());
+            if (esUnoMismo && "ADMIN".equals(existente.getRol())
+                    && usuario.getRol() != null && !"ADMIN".equals(usuario.getRol())) {
+                return respuesta(response, "No puede quitarse a si mismo el rol de administrador",
+                        HttpStatus.CONFLICT);
+            }
+
             existente.setTipoDocumento(usuario.getTipoDocumento());
             existente.setNumeroDocumento(usuario.getNumeroDocumento());
             existente.setNombreCompleto(usuario.getNombreCompleto());
@@ -167,6 +200,24 @@ public class UsuarioService implements IUsuarioService {
                 response.put("statusCode", HttpStatus.NOT_FOUND.value());
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
+            Usuario objetivo = usuarioRepositorio.findById(id).get();
+
+            // No se permite eliminar la propia cuenta con la sesion abierta
+            if (objetivo.getNombreUsuario().equals(usuarioAutenticado.nombreUsuario())) {
+                response.put("Mensaje", "No puede eliminar su propia cuenta mientras tiene la sesion iniciada");
+                response.put("statusCode", HttpStatus.CONFLICT.value());
+                return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+            }
+
+            // Integridad referencial: un dueno con mascotas no se puede borrar
+            long mascotas = mascotaRepositorio.contarPorUsuario(id);
+            if (mascotas > 0) {
+                response.put("Mensaje", "No se puede eliminar: el usuario tiene " + mascotas
+                        + " mascota(s) registrada(s). Elimine o reasigne primero sus mascotas.");
+                response.put("statusCode", HttpStatus.CONFLICT.value());
+                return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+            }
+
             usuarioRepositorio.deleteById(id);
             response.put("Mensaje", "Usuario eliminado correctamente");
             response.put("statusCode", HttpStatus.OK.value());
@@ -211,5 +262,66 @@ public class UsuarioService implements IUsuarioService {
             response.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    // ----- Validaciones de negocio -----
+
+    /**
+     * Valida campos obligatorios y formatos. La contrasena solo es obligatoria
+     * al crear (al editar, si viene vacia se conserva la actual).
+     */
+    private String validarDatos(Usuario u, boolean esCreacion) {
+        if (u == null) {
+            return "No se recibieron los datos del usuario";
+        }
+        if (u.getTipoDocumento() == null || u.getTipoDocumento().getId() == null) {
+            return "Seleccione el tipo de documento";
+        }
+        if (u.getNumeroDocumento() == null || !u.getNumeroDocumento().trim().matches("[0-9A-Za-z]{5,20}")) {
+            return "El numero de documento debe tener entre 5 y 20 caracteres alfanumericos";
+        }
+        if (u.getNombreCompleto() == null || u.getNombreCompleto().trim().length() < 3) {
+            return "El nombre completo es obligatorio (minimo 3 caracteres)";
+        }
+        if (u.getEmail() == null || !u.getEmail().trim().matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
+            return "El correo electronico no tiene un formato valido";
+        }
+        if (u.getNombreUsuario() == null || !u.getNombreUsuario().trim().matches("[A-Za-z0-9._]{4,30}")) {
+            return "El nombre de usuario debe tener entre 4 y 30 caracteres (letras, numeros, punto o guion bajo)";
+        }
+        boolean traePassword = u.getPassword() != null && !u.getPassword().isBlank();
+        if (esCreacion && !traePassword) {
+            return "La contrasena es obligatoria";
+        }
+        if (traePassword && u.getPassword().length() < 6) {
+            return "La contrasena debe tener al menos 6 caracteres";
+        }
+        if (u.getRol() != null && !u.getRol().isBlank() && !ROLES.contains(u.getRol())) {
+            return "Rol invalido. Valores permitidos: " + ROLES;
+        }
+        return null;
+    }
+
+    /**
+     * Verifica que el nombre de usuario y el documento no esten en uso por
+     * OTRO usuario. idActual es null al crear, o el id del usuario que se edita.
+     */
+    private String validarDuplicados(Usuario u, Integer idActual) {
+        Usuario mismoNombre = usuarioRepositorio.findByNombreUsuario(u.getNombreUsuario().trim());
+        if (mismoNombre != null && !mismoNombre.getId().equals(idActual)) {
+            return "El nombre de usuario '" + u.getNombreUsuario() + "' ya esta en uso";
+        }
+        Usuario mismoDocumento = usuarioRepositorio.findByNumeroDocumento(u.getNumeroDocumento().trim());
+        if (mismoDocumento != null && !mismoDocumento.getId().equals(idActual)) {
+            return "Ya existe un usuario registrado con el documento " + u.getNumeroDocumento();
+        }
+        return null;
+    }
+
+    private ResponseEntity<?> respuesta(Map<String, Object> response, String mensaje, HttpStatus estado) {
+        response.put("Mensaje", mensaje);
+        response.put("Usuario", null);
+        response.put("statusCode", estado.value());
+        return new ResponseEntity<>(response, estado);
     }
 }

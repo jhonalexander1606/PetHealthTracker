@@ -1,143 +1,188 @@
-# PetHealth Tracker
+# PetHealth Tracker — Proyecto Completo
 
-**Pasaporte Sanitario Digital y Control del Historial Médico de Mascotas**
+> **Pasaporte Sanitario Digital y Control del Historial Médico de Mascotas**
+> Proyecto final del curso **Entornos de Programación** — Universidad Industrial de Santander
+> Semestre 2026-II — **Grupo 02**
 
-Proyecto de la asignatura **Entornos de Programación** — Universidad Industrial de Santander (UIS) — 2026-II — **Grupo 02**.
+Proyecto cliente-servidor con:
+- **Backend**: Spring Boot + JWT + MySQL
+- **Frontend**: React + Vite + Axios + Bootstrap
 
-Aplicación web para registrar dueños, mascotas y su historial médico (vacunas, consultas, desparasitaciones), con **login seguro mediante JWT** y **control de acceso por roles**.
+### ✨ Funciones principales
+- Login con **JWT** y tres roles (ADMIN, VETERINARIO, DUENO); cada dueño solo ve sus mascotas.
+- **Dashboard** con indicadores, gráficas y **alertas de vacunas vencidas o próximas**.
+- **Pasaporte Sanitario Digital** por mascota, con **código QR**, línea de tiempo e impresión en PDF.
+- **Calendario de vacunación** mensual.
+- CRUD de usuarios, mascotas y eventos médicos con búsqueda, filtros, orden, paginación y **exportar a Excel**.
+- Validaciones de negocio en backend y frontend; borrado en cascada controlado.
+- Mi perfil (datos y cambio de contraseña), **modo oscuro** y diseño adaptable a celular.
 
----
-
-## Integrantes
-
-| Integrante | CRUD a cargo |
-|------------|--------------|
-| Jhon Alexander Calderón Muñoz | CRUD de **Usuarios** |
-| David Fernando Muñoz Ortiz | CRUD de **Mascotas** |
-| Juan Diego Téllez Quintero | CRUD de **Eventos Médicos** |
-
----
-
-## Tecnologías
-
-**Backend**
-- Java 17
-- Spring Boot 2.7.10 (Spring Web, Spring Data JPA, Spring Security)
-- JSON Web Token (jjwt 0.11.5)
-- MySQL 8
-- Maven
-- Swagger / SpringDoc OpenAPI
-
-**Frontend**
-- HTML, CSS y JavaScript puro (sin frameworks)
-- Bootstrap 5 (estilos)
-- `fetch` para el login y `XMLHttpRequest` para el resto de peticiones
+Detalle completo en [`docs/FUNCIONES_AVANZADAS.md`](docs/FUNCIONES_AVANZADAS.md).
 
 ---
 
-## Funcionalidades
+## 👥 Equipo
 
-- **Login seguro con JWT**: la contraseña se valida en el servidor y se entrega un token firmado que viaja en cada petición.
-- **Contraseñas cifradas** con BCrypt (nunca se guardan ni se devuelven en texto plano).
-- **Control de acceso por roles**: ADMIN, VETERINARIO y DUENO.
-- **Tres CRUD completos**: Usuarios, Mascotas y Eventos Médicos.
-- **Documentación interactiva de la API** con Swagger.
-
-### Roles y permisos
-
-| Rol | Qué puede hacer |
-|-----|-----------------|
-| **ADMIN** | Todo: gestiona usuarios, mascotas y eventos. |
-| **VETERINARIO** | Ve todas las mascotas y sus eventos, y los datos de contacto del dueño. No gestiona usuarios. |
-| **DUENO** | Solo ve y gestiona sus propias mascotas y los eventos de ellas. |
+| Integrante | Cédula | Rol | CRUD |
+|-----------|--------|-----|------|
+| David Fernando Muñoz Ortiz | 2234504 | PO / QA | Mascotas |
+| Jhon Alexander Calderón Muñoz | 2234570 | SM / Architecture | Usuarios + Login/JWT |
+| Juan Diego Téllez Quintero | 2234511 | Developer | Eventos Médicos |
 
 ---
 
-## Diseño de la base de datos
-
-La base de datos `pethealthtracker` tiene 4 tablas relacionadas:
-
-![Modelo Entidad-Relación](docs/diseno_base_datos.png)
-
-- `tipodocumento` (1) a (N) `usuario` — un tipo de documento lo usan muchos usuarios.
-- `usuario` (1) a (N) `mascota` — un dueño tiene muchas mascotas.
-- `mascota` (1) a (N) `eventomedico` — una mascota tiene muchos eventos médicos.
-
-El script completo está en [`database/pethealthtracker.sql`](database/pethealthtracker.sql).
-
----
-
-## Estructura del proyecto
+## 📁 Estructura del proyecto
 
 ```
 PetHealthTracker/
-├── backend/                 # Microservicio Spring Boot (API REST)
-│   ├── src/main/java/uis/edu/entorno/pethealth/
-│   │   ├── modelo/          # Entidades JPA (Usuario, Mascota, EventoMedico, ...)
-│   │   ├── repositorio/     # Acceso a datos (Spring Data JPA)
-│   │   ├── servicio/        # Lógica de negocio
-│   │   ├── controlador/     # Endpoints REST (incluye AuthController del login)
-│   │   └── seguridad/       # JWT y Spring Security
-│   └── src/main/resources/application.properties
-├── frontend/                # Interfaz web (HTML/CSS/JS)
-│   ├── index.html           # Login
-│   ├── menu.html            # Panel principal
-│   ├── usuarios.html / mascotas.html / eventos.html
-│   └── js/                  # login.js, request.js y los CRUD
+├── backend/              ← API REST en Spring Boot 2.7 con JWT
+│   ├── pom.xml
+│   └── src/main/java/uis/edu/entorno/pethealth/
+│       ├── modelo/
+│       ├── repositorio/
+│       ├── servicio/
+│       ├── controlador/  ← CRUDs + DashboardController + PerfilController + ManejadorErrores
+│       └── seguridad/    ← JwtUtil, JwtAuthenticationFilter, SecurityConfig, UsuarioAutenticado
+│
+├── frontend-react/       ← Cliente SPA en React + Vite (NUEVO)
+│   ├── package.json
+│   └── src/
+│       ├── main.jsx
+│       ├── App.jsx           ← rutas anidadas con React Router
+│       ├── services/         ← capa Axios
+│       ├── hooks/            ← useTabla (busqueda, orden, paginacion)
+│       ├── utils/            ← fechas, exportar CSV, JWT, tema
+│       └── components/       ← Dashboard, Pasaporte, Calendario, Perfil, CRUDs
+│
 ├── database/
-│   └── pethealthtracker.sql # Script de creación + datos de ejemplo
-└── docs/                    # Documentación (diseño BD, explicación JWT)
+│   ├── pethealthtracker.sql  ← script de creación + datos de prueba
+│   └── datos_demo.sql        ← (opcional) más mascotas y eventos para la demo
+│
+└── docs/
+    ├── Informe_Tecnico_Sprint3y4.md
+    ├── EXPLICACION_SEGURIDAD_JWT.md
+    ├── FUNCIONES_AVANZADAS.md
+    └── diseno_base_datos.png
 ```
 
 ---
 
-## Instalación y ejecución
+## 🚀 Puesta en marcha (orden)
 
-### Requisitos
-- **Java JDK 17** (https://adoptium.net/temurin/releases/?version=17)
-- **MySQL 8** + MySQL Workbench
-- **NetBeans 18 o superior**
+### 1. Base de datos — MySQL / MariaDB
 
-### Pasos
+Debe correr en `localhost:3307` (puerto configurado en `application.properties`).
 
-**1. Crear la base de datos**
-Abre MySQL Workbench, abre `database/pethealthtracker.sql` y ejecútalo. Crea la base con sus 4 tablas y datos de ejemplo.
-
-**2. Configurar la conexión**
-En `backend/src/main/resources/application.properties`, ajusta a tu MySQL local:
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/pethealthtracker?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
-spring.datasource.username=root
-spring.datasource.password=TU_CONTRASEÑA
+```bash
+mysql -u root -P 3307 < database/pethealthtracker.sql
 ```
 
-**3. Ejecutar el backend**
-Abre la carpeta `backend` como proyecto Maven en NetBeans y ejecútalo (`spring-boot:run`).
-El backend corre en `http://localhost:8094`. La documentación está en `http://localhost:8094/swagger-ui.html`.
+Esto crea la base `pethealthtracker` con 4 tablas y usuarios de prueba.
 
-**4. Abrir el frontend**
-Abre `frontend/index.html` en el navegador.
+**Recomendado para la demo:** ejecute también `database/datos_demo.sql`. Agrega dueños, mascotas y eventos con fechas calculadas desde **hoy**, así siempre hay vacunas vencidas y próximas en las alertas. Se puede ejecutar varias veces sin duplicar datos.
 
-### Credenciales de prueba
+### 2. Backend — Spring Boot (puerto 8094)
+
+**Opción NetBeans:** `File → Open Project → backend/` → click derecho → **Run** (F6).
+
+**Opción terminal:**
+
+```bash
+cd backend
+mvn spring-boot:run
+```
+
+Verifica:
+- API: <http://localhost:8094/api/auth/login> (POST)
+- Swagger: <http://localhost:8094/swagger-ui.html>
+
+### 3. Frontend React (puerto 5173)
+
+```bash
+cd frontend-react
+npm install
+npm run dev
+```
+
+Abre <http://localhost:5173>.
+
+---
+
+## 🔐 Credenciales de prueba
 
 | Usuario | Contraseña | Rol |
 |---------|-----------|-----|
-| `admininicial` | `admin123456` | ADMIN |
+| `admininicial` | `admin123456` | **ADMIN** (único que puede crear/editar/borrar usuarios) |
 | `davidmunoz` | `123456` | VETERINARIO |
 | `jhoncalderon` | `123456` | DUENO |
 | `juantellez` | `123456` | DUENO |
+| `mariarojas`, `carlosperez` | `123456` | DUENO *(datos_demo.sql)* |
+| `draluragomez` | `123456` | VETERINARIO *(datos_demo.sql)* |
 
 ---
 
-## Seguridad (JWT)
+## 📡 Stack técnico
 
-El login (`POST /api/auth/login`) valida las credenciales y devuelve un **token JWT**. El frontend lo guarda y lo envía en cada petición (`Authorization: Bearer <token>`). El servidor valida el token en cada llamada y autoriza según el rol. Sin un token válido, los endpoints responden `401`.
+### Backend
+- Java 17 + **Spring Boot 2.7.10**
+- **Spring Security + JWT (HS256)** con BCrypt para hashear contraseñas
+- Spring Data JPA + Hibernate
+- MySQL / MariaDB (puerto 3307)
+- SpringDoc OpenAPI (Swagger)
+- Arquitectura MVC de 3 capas
 
-La explicación detallada está en [`docs/EXPLICACION_SEGURIDAD_JWT.md`](docs/EXPLICACION_SEGURIDAD_JWT.md).
+### Frontend React (siguiendo el PDF del profe)
+- **Vite** + **React 18**
+- **Axios** con interceptor para adjuntar el JWT en cada petición
+- **React Router DOM v6**
+- **Bootstrap 5** + **Font Awesome**
+- **SweetAlert2** para confirmaciones
 
 ---
 
-## Documentación adicional
+## 🧭 Endpoints principales
 
-- [`docs/EXPLICACION_SEGURIDAD_JWT.md`](docs/EXPLICACION_SEGURIDAD_JWT.md) — cómo se implementó el login con JWT.
-- [`docs/Informe_Tecnico_Sprint3y4.md`](docs/Informe_Tecnico_Sprint3y4.md) — informe técnico.
+Base URL: `http://localhost:8094`
+
+| Método | Ruta | Acceso |
+|--------|------|--------|
+| POST | `/api/auth/login` | público |
+| GET | `/api/usuarios/list` | autenticado |
+| POST | `/api/usuarios/save` | **solo ADMIN** |
+| PUT | `/api/usuarios/update/{id}` | **solo ADMIN** |
+| DELETE | `/api/usuarios/delete/{id}` | **solo ADMIN** |
+| GET/POST/PUT/DELETE | `/api/mascotas/**` | autenticado |
+| GET/POST/PUT/DELETE | `/api/eventos/**` | autenticado |
+| GET | `/api/tipodocumento/list` | autenticado |
+| GET | `/api/dashboard/resumen` | autenticado (un DUENO solo recibe lo suyo) |
+| GET / PUT | `/api/perfil` | autenticado (cuenta propia) |
+| PUT | `/api/perfil/password` | autenticado (exige la contraseña actual) |
+
+Documentación interactiva completa: <http://localhost:8094/swagger-ui.html>
+
+---
+
+## ☁️ Despliegue
+
+El **frontend** se despliega en Vercel en 2 clicks (detecta Vite automáticamente). Guía completa en `frontend-react/INSTRUCCIONES_PASO_A_PASO.md`.
+
+Para el **backend**, las opciones gratuitas son Render.com (Spring Boot) + Aiven (MySQL).
+
+En la sustentación es válido mostrar el frontend online (Vercel) y el backend corriendo local — así se evita el costo y complejidad de desplegar la base de datos.
+
+---
+
+## 📚 Documentación adicional
+
+Dentro de `docs/` encontrarás:
+- **PUBLICAR_CON_TUNEL.md**: cómo abrir la app desde otro computador con un túnel de Cloudflare
+- **FUNCIONES_AVANZADAS.md**: funciones nuevas, reglas de negocio, guion de demostración y reparto de la sustentación
+- **Informe_Tecnico_Sprint3y4.md** — informe técnico de la entrega
+- **EXPLICACION_SEGURIDAD_JWT.md** — cómo funciona el JWT paso a paso
+- **diseno_base_datos.png** — diagrama entidad-relación
+
+En `frontend-react/README.md` está la documentación específica del frontend React y el mapeo de cada sección del PDF del profe con el código entregado.
+
+---
+
+> © 2026 — Universidad Industrial de Santander — Entornos de Programación — Grupo 02

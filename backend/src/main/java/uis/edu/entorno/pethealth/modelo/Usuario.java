@@ -54,7 +54,7 @@ public class Usuario {
     @Column(name = "password", length = 255, nullable = false)
     private String password;
 
-    // Rol del usuario para el control de acceso por JWT: ADMIN, VETERINARIO o DUENO
+    // Rol del usuario para el control de acceso por JWT: ADMIN, VETERINARIO o DUEÑO
     @Column(name = "rol", length = 20, nullable = false)
     private String rol = "DUENO";
 

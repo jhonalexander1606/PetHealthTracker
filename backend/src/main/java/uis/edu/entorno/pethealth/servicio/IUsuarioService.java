@@ -11,8 +11,7 @@ import uis.edu.entorno.pethealth.modelo.Usuario;
  * Interfaz del servicio de Usuario.
  *
  * Expone las operaciones del CRUD de usuarios y del microservicio de login
- * (siguiendo exactamente el patron visto en clase con el MicroservicioLogin
- * de Acceso UIS).
+
  */
 public interface IUsuarioService {
 

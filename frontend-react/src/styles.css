@@ -1,0 +1,632 @@
+/* =====================================================================
+   PetHealth Tracker - Estilos propios (complemento a Bootstrap 5.3)
+   Entornos de Programacion UIS 2026-II - Grupo 02
+
+   Los colores se definen como variables CSS. El modo oscuro cambia esas
+   variables cuando <html data-bs-theme="dark"> (Bootstrap usa el mismo
+   atributo para sus propios componentes).
+   ===================================================================== */
+
+:root {
+  --pet-primary: #16a085;
+  --pet-primary-dark: #0d6b4f;
+  --pet-primary-light: #58d68d;
+  --pet-accent: #e67e22;
+  --pet-bg: #f4f6f9;
+  --pet-surface: #ffffff;
+  --pet-surface-2: #f8fafb;
+  --pet-text: #2c3e50;
+  --pet-muted: #7f8c8d;
+  --pet-border: #e1e8ed;
+  --pet-hover: #f0f9f6;
+  --pet-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  --rojo: #e74c3c;
+  --naranja: #e67e22;
+  --verde: #27ae60;
+}
+
+[data-bs-theme='dark'] {
+  --pet-bg: #0f1716;
+  --pet-surface: #17211f;
+  --pet-surface-2: #1d2a27;
+  --pet-text: #e3ece9;
+  --pet-muted: #93a5a0;
+  --pet-border: #2a3a36;
+  --pet-hover: #1f302c;
+  --pet-shadow: 0 2px 15px rgba(0, 0, 0, 0.35);
+  --pet-primary-dark: #58d6b4;
+  --bs-body-bg: #0f1716;
+  --bs-body-color: #e3ece9;
+}
+
+body {
+  background-color: var(--pet-bg);
+  color: var(--pet-text);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+}
+
+a { color: var(--pet-primary); }
+a:hover { color: var(--pet-primary-dark); }
+.text-pet { color: var(--pet-primary) !important; }
+.min-w-0 { min-width: 0; }
+
+/* ---------- Login ---------- */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  background: radial-gradient(circle at 15% 20%, rgba(255,255,255,.12) 0, transparent 40%),
+              linear-gradient(135deg, #0b5a43 0%, #16a085 55%, #58d68d 100%);
+}
+
+.login-contenedor {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  max-width: 920px;
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
+}
+
+.login-hero {
+  color: #fff;
+  padding: 3rem 2.5rem;
+  background: rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(4px);
+}
+.login-hero h1 { font-weight: 800; font-size: 2rem; margin-bottom: .5rem; }
+.login-hero .lead { opacity: .9; font-size: 1.05rem; }
+.login-beneficios { list-style: none; padding: 0; margin: 2rem 0 0; }
+.login-beneficios li { display: flex; align-items: center; gap: .75rem; padding: .5rem 0; }
+.login-beneficios i { width: 34px; height: 34px; border-radius: 10px; background: rgba(255,255,255,.18);
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+.login-card {
+  background: var(--pet-surface);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-brand {
+  width: 72px;
+  height: 72px;
+  margin-bottom: 1.25rem;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--pet-primary);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.1rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.login-title { font-weight: 700; color: var(--pet-text); margin-bottom: .2rem; }
+.login-subtitle { color: var(--pet-muted); font-size: .9rem; margin-bottom: 1.5rem; }
+.login-demos { margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px dashed var(--pet-border); }
+.demo-btn { border: 1px solid var(--pet-border); background: var(--pet-surface-2); color: var(--pet-text); font-weight: 600; font-size: .78rem; }
+.demo-btn:hover { background: var(--pet-hover); }
+.role-borde-ADMIN { border-left: 3px solid #e74c3c; }
+.role-borde-VETERINARIO { border-left: 3px solid #3498db; }
+.role-borde-DUENO { border-left: 3px solid #16a085; }
+.login-pie { color: rgba(255,255,255,.85); font-size: .8rem; margin: 1.25rem 0 0; text-align: center; }
+
+@media (max-width: 768px) {
+  .login-contenedor { grid-template-columns: 1fr; }
+  .login-hero { padding: 2rem 1.5rem; }
+  .login-beneficios { display: none; }
+}
+
+/* ---------- Navbar ---------- */
+.navbar-pet {
+  background: linear-gradient(135deg, #0d6b4f, #16a085) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+.navbar-pet .navbar-brand,
+.navbar-pet .nav-link { color: #fff !important; }
+.navbar-pet .nav-link {
+  font-weight: 500;
+  transition: background 0.15s;
+  border-radius: 6px;
+  margin: 0 0.1rem;
+  padding-left: .7rem !important;
+  padding-right: .7rem !important;
+}
+.navbar-pet .nav-link:hover,
+.navbar-pet .nav-link.active { background: rgba(255, 255, 255, 0.18); }
+.navbar-pet .navbar-toggler { border-color: rgba(255,255,255,.4); }
+
+.btn-icono {
+  position: relative;
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.25);
+  background: rgba(255,255,255,.12);
+  color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.btn-icono:hover { background: rgba(255,255,255,.25); }
+.contador {
+  position: absolute; top: -6px; right: -6px;
+  min-width: 19px; height: 19px; padding: 0 5px;
+  border-radius: 10px; background: var(--naranja); color: #fff;
+  font-size: .7rem; font-weight: 700; line-height: 19px;
+  border: 2px solid #128a70;
+}
+.contador.rojo { background: var(--rojo); animation: latido 1.6s infinite; }
+@keyframes latido { 0%,100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+
+.btn-usuario {
+  display: flex; align-items: center; gap: .5rem;
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
+  color: #fff; border-radius: 12px; padding: .25rem .6rem .25rem .3rem;
+}
+.btn-usuario:hover { background: rgba(255,255,255,.22); }
+
+.avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #fff; color: var(--pet-primary); font-weight: 700; font-size: .8rem;
+  flex-shrink: 0;
+}
+.avatar-sm { width: 34px; height: 34px; color: #fff; }
+.avatar-lg { width: 84px; height: 84px; font-size: 1.8rem; color: #fff; display: flex; }
+.avatar.role-ADMIN, .avatar.role-VETERINARIO, .avatar.role-DUENO { color: #fff; }
+
+.desplegable {
+  position: absolute; right: 0; top: calc(100% + 8px);
+  background: var(--pet-surface); color: var(--pet-text);
+  border: 1px solid var(--pet-border); border-radius: 12px;
+  box-shadow: 0 12px 35px rgba(0,0,0,.18);
+  min-width: 240px; z-index: 1050; overflow: hidden;
+  animation: aparecer .15s ease-out;
+}
+@keyframes aparecer { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+.desplegable-alertas { width: 340px; }
+.desplegable-titulo { padding: .75rem 1rem; font-weight: 600; font-size: .85rem; border-bottom: 1px solid var(--pet-border); }
+.desplegable-item {
+  display: flex; align-items: center; gap: .6rem; width: 100%;
+  padding: .6rem 1rem; color: var(--pet-text); text-decoration: none;
+  background: none; border: none; font-size: .9rem; text-align: left;
+}
+.desplegable-item:hover { background: var(--pet-hover); color: var(--pet-text); }
+.desplegable-item i { width: 18px; text-align: center; color: var(--pet-muted); }
+.desplegable-item.text-danger i { color: var(--rojo); }
+.desplegable-pie { display: block; text-align: center; padding: .55rem; font-size: .82rem;
+  border-top: 1px solid var(--pet-border); text-decoration: none; }
+.lista-alertas { max-height: 340px; overflow-y: auto; }
+.lista-alertas button {
+  display: flex; gap: .6rem; align-items: flex-start; width: 100%;
+  background: none; border: none; padding: .6rem 1rem; color: var(--pet-text); font-size: .85rem;
+  border-bottom: 1px solid var(--pet-border);
+}
+.lista-alertas button:hover { background: var(--pet-hover); }
+
+.punto { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+.punto.rojo { background: var(--rojo); }
+.punto.naranja { background: var(--naranja); }
+.punto.verde { background: var(--verde); }
+
+@media (max-width: 991px) {
+  .nav-acciones { padding: .5rem 0 .75rem; }
+  .desplegable { right: auto; left: 0; }
+  .desplegable-alertas { width: min(340px, 90vw); }
+}
+
+/* ---------- Estructura ---------- */
+.page-container {
+  max-width: 1240px;
+  margin: 1.75rem auto;
+  padding: 0 1rem;
+  min-height: calc(100vh - 160px);
+}
+
+.pie { text-align: center; color: var(--pet-muted); font-size: .8rem; padding: 1rem 0 1.5rem; }
+
+.section-card {
+  background: var(--pet-surface);
+  border-radius: 14px;
+  box-shadow: var(--pet-shadow);
+  border: 1px solid var(--pet-border);
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--pet-border);
+}
+
+.section-title {
+  color: var(--pet-primary-dark);
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.section-subtitle { color: var(--pet-muted); font-size: 0.9rem; margin: 0.3rem 0 0 0; }
+
+.tarjeta-titulo { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+.tarjeta-titulo h2 { font-size: 1.05rem; font-weight: 700; margin: 0; color: var(--pet-text); }
+.tarjeta-titulo h2 i { color: var(--pet-primary); margin-right: .35rem; }
+
+/* ---------- Botones ---------- */
+.btn-pet {
+  background: linear-gradient(135deg, #16a085, #0d6b4f);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn-sm.btn-pet { padding: .25rem .55rem; }
+.btn-pet:hover, .btn-pet:focus { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(22, 160, 133, 0.35); color: #fff; }
+.btn-pet:disabled { color: #fff; opacity: .65; }
+
+/* ---------- Dashboard ---------- */
+.bienvenida {
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+  background: linear-gradient(120deg, #0d6b4f 0%, #16a085 60%, #2ecc71 100%);
+  color: #fff; border-radius: 16px; padding: 1.6rem 1.9rem; margin-bottom: 1.25rem;
+  box-shadow: 0 10px 30px rgba(22,160,133,.25);
+}
+.bienvenida-fecha { opacity: .8; margin: 0 0 .2rem; font-size: .9rem; }
+.bienvenida-titulo { font-size: 1.7rem; font-weight: 800; margin: 0 0 .3rem; }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1rem; margin-bottom: 1.25rem; }
+.kpi {
+  display: flex; gap: 1rem; align-items: center;
+  background: var(--pet-surface); border: 1px solid var(--pet-border); border-radius: 14px;
+  padding: 1.1rem 1.2rem; text-decoration: none; color: var(--pet-text);
+  box-shadow: var(--pet-shadow); transition: transform .2s, box-shadow .2s;
+}
+.kpi:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,.1); color: var(--pet-text); }
+.kpi-icono { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; flex-shrink: 0; }
+.kpi-valor { font-size: 1.75rem; font-weight: 800; line-height: 1; }
+.kpi-etiqueta { color: var(--pet-muted); font-size: .85rem; margin-top: .2rem; }
+.kpi-detalle { font-size: .72rem; color: var(--pet-muted); margin-top: .15rem; }
+.kpi-azul .kpi-icono { background: rgba(52,152,219,.14); color: #3498db; }
+.kpi-verde .kpi-icono { background: rgba(22,160,133,.14); color: #16a085; }
+.kpi-morado .kpi-icono { background: rgba(155,89,182,.14); color: #9b59b6; }
+.kpi-naranja .kpi-icono { background: rgba(230,126,34,.14); color: #e67e22; }
+.kpi-rojo .kpi-icono { background: rgba(231,76,60,.14); color: #e74c3c; }
+
+.alertas-lista { max-height: 380px; overflow-y: auto; }
+.alerta-item {
+  display: flex; gap: 1rem; align-items: center;
+  padding: .75rem; border-radius: 10px; margin-bottom: .5rem;
+  background: var(--pet-surface-2); border-left: 4px solid var(--naranja);
+}
+.alerta-item.vencida { border-left-color: var(--rojo); }
+.alerta-dias { width: 62px; text-align: center; flex-shrink: 0; }
+.alerta-dias .numero { display: block; font-size: 1.5rem; font-weight: 800; line-height: 1; }
+.alerta-dias .unidad { font-size: .66rem; color: var(--pet-muted); text-transform: uppercase; }
+.alerta-item.vencida .numero { color: var(--rojo); }
+.alerta-item.proxima .numero { color: var(--naranja); }
+
+/* Graficas */
+.barras-h { display: flex; flex-direction: column; gap: .65rem; }
+.barra-fila { display: grid; grid-template-columns: 150px 1fr 34px; gap: .6rem; align-items: center; font-size: .83rem; }
+.barra-etiqueta { text-transform: capitalize; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.barra-pista { background: var(--pet-surface-2); border-radius: 6px; height: 14px; overflow: hidden; }
+.barra-relleno { height: 100%; border-radius: 6px; transition: width .8s ease; }
+.barra-valor { font-weight: 700; text-align: right; }
+
+.dona-contenedor { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+.dona { width: 180px; height: 180px; }
+.dona circle { transition: stroke-dasharray .8s ease; }
+.dona-total { font-size: 7px; font-weight: 800; fill: var(--pet-text); }
+.dona-sub { font-size: 2.6px; fill: var(--pet-muted); text-transform: uppercase; }
+.leyenda { list-style: none; padding: 0; margin: 0; min-width: 150px; font-size: .88rem; }
+.leyenda li { display: flex; align-items: center; gap: .5rem; padding: .25rem 0; }
+.leyenda-color { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+.columnas { display: flex; align-items: flex-end; gap: .8rem; height: 210px; padding-top: .5rem; }
+.columna { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; }
+.columna-pista { flex: 1; width: 100%; max-width: 48px; display: flex; align-items: flex-end; background: var(--pet-surface-2); border-radius: 8px; overflow: hidden; }
+.columna-relleno { width: 100%; background: linear-gradient(180deg, #58d68d, #16a085); border-radius: 8px 8px 0 0; transition: height .8s ease; min-height: 3px; }
+.columna-valor { font-weight: 700; font-size: .85rem; margin-bottom: .25rem; }
+.columna-etiqueta { font-size: .78rem; color: var(--pet-muted); margin-top: .35rem; text-transform: capitalize; }
+
+/* Linea de tiempo */
+.linea-tiempo { list-style: none; padding: 0; margin: 1rem 0 0; position: relative; }
+.linea-tiempo::before { content: ''; position: absolute; left: 17px; top: 6px; bottom: 6px; width: 2px; background: var(--pet-border); }
+.linea-tiempo > li { position: relative; display: flex; gap: 1rem; padding-bottom: 1.1rem; }
+.lt-marca {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; z-index: 1;
+  display: flex; align-items: center; justify-content: center; color: #fff; background: #95a5a6;
+  box-shadow: 0 0 0 4px var(--pet-surface);
+}
+.lt-vacuna .lt-marca { background: #27ae60; }
+.lt-desparasitacion .lt-marca { background: #9b59b6; }
+.lt-consulta .lt-marca { background: #3498db; }
+.lt-cirugia .lt-marca { background: #e74c3c; }
+.lt-contenido { flex: 1; background: var(--pet-surface-2); border: 1px solid var(--pet-border); border-radius: 10px; padding: .75rem 1rem; }
+.linea-tiempo.compacta::before { left: 5px; }
+.linea-tiempo.compacta li { gap: 1rem; padding: 0 0 .7rem 1.4rem; display: flex; flex-wrap: wrap; font-size: .9rem; }
+.linea-tiempo.compacta li::before { content: ''; position: absolute; left: 0; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: var(--pet-primary); box-shadow: 0 0 0 3px var(--pet-surface); }
+.lt-fecha { color: var(--pet-muted); min-width: 105px; font-size: .85rem; }
+
+/* ---------- Tablas y herramientas ---------- */
+.table { --bs-table-bg: transparent; --bs-table-color: var(--pet-text); }
+.table thead th {
+  background: linear-gradient(135deg, #0d6b4f, #16a085);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  white-space: nowrap;
+  font-size: .88rem;
+}
+.table tbody tr:hover > * { background: var(--pet-hover); }
+.table td { border-color: var(--pet-border); }
+.th-ordenable { cursor: pointer; user-select: none; }
+.th-ordenable i { opacity: .55; font-size: .75rem; }
+.th-ordenable.activa i { opacity: 1; }
+.fila-propia > td { background: rgba(22,160,133,.06); }
+
+.barra-herramientas { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-bottom: 1rem; }
+.buscador { flex: 1 1 260px; max-width: 420px; }
+.filtro { width: auto; min-width: 160px; }
+.rango-fechas { display: flex; align-items: center; gap: .35rem; }
+.rango-fechas input { width: 150px; }
+
+.tabla-pie { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .75rem; margin-top: .75rem; }
+.pagination .page-link { color: var(--pet-primary); }
+.pagination .active > .page-link { background: var(--pet-primary); border-color: var(--pet-primary); color: #fff; }
+
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip {
+  border: 1px solid var(--pet-border); background: var(--pet-surface-2); color: var(--pet-text);
+  border-radius: 20px; padding: .3rem .8rem; font-size: .85rem; display: inline-flex; align-items: center; gap: .4rem;
+}
+.chip span { background: var(--pet-border); border-radius: 10px; padding: 0 .45rem; font-size: .75rem; font-weight: 700; }
+.chip:hover { border-color: var(--pet-primary); }
+.chip.activo { background: var(--pet-primary); border-color: var(--pet-primary); color: #fff; }
+.chip.activo span { background: rgba(255,255,255,.25); }
+.chip-rojo i { color: var(--rojo); }
+.chip-naranja i { color: var(--naranja); }
+.chip.activo i { color: #fff; }
+
+/* ---------- Badges ---------- */
+.badge-tipo {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #fff;
+  background: #7f8c8d;
+  white-space: nowrap;
+}
+.badge-vacuna { background: #27ae60; }
+.badge-consulta { background: #3498db; }
+.badge-desparasitacion { background: #9b59b6; }
+.badge-cirugia { background: #e74c3c; }
+
+.estado-badge { display: inline-flex; align-items: center; padding: .2rem .55rem; border-radius: 6px; font-size: .75rem; font-weight: 600; white-space: nowrap; }
+.estado-vencida { background: rgba(231,76,60,.14); color: #c0392b; }
+.estado-proxima { background: rgba(230,126,34,.16); color: #b9600f; }
+.estado-aldia { background: rgba(39,174,96,.15); color: #1e8449; }
+.estado-neutro { background: var(--pet-surface-2); color: var(--pet-muted); border: 1px solid var(--pet-border); }
+[data-bs-theme='dark'] .estado-vencida { color: #ff8a7d; }
+[data-bs-theme='dark'] .estado-proxima { color: #ffb36b; }
+[data-bs-theme='dark'] .estado-aldia { color: #6fdc9a; }
+
+.role-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.18rem 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.role-ADMIN       { background: #e74c3c; color: #fff; }
+.role-VETERINARIO { background: #3498db; color: #fff; }
+.role-DUENO       { background: #16a085; color: #fff; }
+
+/* ---------- Estados de carga / vacio ---------- */
+.esqueleto { padding: .5rem 0; }
+.esqueleto-fila {
+  height: 18px; border-radius: 6px; margin-bottom: .8rem;
+  background: linear-gradient(90deg, var(--pet-surface-2) 25%, var(--pet-border) 50%, var(--pet-surface-2) 75%);
+  background-size: 200% 100%; animation: brillo 1.3s infinite;
+}
+@keyframes brillo { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+.empty-box { text-align: center; padding: 3rem 1rem; color: var(--pet-muted); }
+.empty-box .icon { font-size: 3rem; opacity: 0.4; margin-bottom: 0.5rem; }
+
+/* ---------- Mascotas en tarjetas ---------- */
+.mascotas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+.mascota-card {
+  border: 1px solid var(--pet-border); border-radius: 14px; padding: 1rem;
+  background: var(--pet-surface-2); display: flex; flex-direction: column; gap: .8rem;
+  transition: transform .2s, box-shadow .2s;
+}
+.mascota-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,.08); }
+.mascota-card-top { display: flex; gap: .75rem; align-items: center; }
+.mascota-nombre { font-size: 1.1rem; font-weight: 700; margin: 0; }
+.mascota-avatar, .pasaporte-foto {
+  width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #fff;
+  background: linear-gradient(135deg, #16a085, #0d6b4f);
+}
+.especie-gato { background: linear-gradient(135deg, #9b59b6, #6c3483); }
+.especie-ave { background: linear-gradient(135deg, #3498db, #21618c); }
+.especie-conejo { background: linear-gradient(135deg, #e67e22, #a04000); }
+.especie-otro { background: linear-gradient(135deg, #7f8c8d, #34495e); }
+.mascota-datos { display: grid; grid-template-columns: 1fr 1fr; gap: .35rem; font-size: .85rem; }
+.mascota-datos i { color: var(--pet-primary); width: 16px; }
+.mascota-card-pie { display: flex; justify-content: space-between; align-items: center; gap: .5rem; border-top: 1px solid var(--pet-border); padding-top: .75rem; }
+
+/* ---------- Formularios ---------- */
+.form-pet label { font-weight: 600; color: var(--pet-text); }
+.form-pet .form-control:focus,
+.form-pet .form-select:focus {
+  border-color: var(--pet-primary);
+  box-shadow: 0 0 0 0.2rem rgba(22, 160, 133, 0.2);
+}
+.form-seccion {
+  font-size: .8rem; text-transform: uppercase; letter-spacing: .6px; font-weight: 700;
+  color: var(--pet-muted); margin: 1.5rem 0 .75rem; padding-bottom: .4rem; border-bottom: 1px dashed var(--pet-border);
+}
+.form-seccion:first-child { margin-top: 0; }
+.form-seccion i { color: var(--pet-primary); margin-right: .35rem; }
+.required { color: var(--rojo); }
+
+.selector-especie { display: flex; gap: .5rem; flex-wrap: wrap; }
+.opcion-especie {
+  flex: 1 1 70px; display: flex; flex-direction: column; align-items: center; gap: .2rem;
+  padding: .55rem .25rem; border: 2px solid var(--pet-border); border-radius: 10px;
+  background: var(--pet-surface-2); color: var(--pet-text); font-size: .8rem;
+}
+.opcion-especie i { font-size: 1.2rem; color: var(--pet-muted); }
+.opcion-especie:hover { border-color: var(--pet-primary-light); }
+.opcion-especie.activa { border-color: var(--pet-primary); background: rgba(22,160,133,.1); }
+.opcion-especie.activa i { color: var(--pet-primary); }
+.selector-especie.is-invalid .opcion-especie { border-color: rgba(231,76,60,.5); }
+
+.selector-rol { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .6rem; }
+.opcion-rol {
+  display: flex; flex-direction: column; align-items: flex-start; gap: .15rem; text-align: left;
+  padding: .8rem 1rem; border: 2px solid var(--pet-border); border-radius: 12px;
+  background: var(--pet-surface-2); color: var(--pet-text);
+}
+.opcion-rol i { font-size: 1.2rem; color: var(--pet-muted); margin-bottom: .2rem; }
+.opcion-rol small { color: var(--pet-muted); }
+.opcion-rol.activa { border-color: var(--pet-primary); background: rgba(22,160,133,.1); }
+.opcion-rol.activa i { color: var(--pet-primary); }
+.opcion-rol:disabled { opacity: .45; }
+
+/* ---------- Pasaporte ---------- */
+.pasaporte {
+  background: var(--pet-surface); border: 1px solid var(--pet-border); border-radius: 18px;
+  box-shadow: var(--pet-shadow); overflow: hidden;
+}
+.pasaporte-cabecera {
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
+  padding: 1.5rem 1.75rem; color: #fff;
+  background: linear-gradient(120deg, #0b4f3c, #16a085);
+  position: relative;
+}
+.pasaporte-cabecera::after {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px);
+  background-size: 14px 14px; pointer-events: none;
+}
+.pasaporte-cabecera h1 { font-size: 1.6rem; font-weight: 800; margin: .2rem 0; }
+.pasaporte-cabecera p { opacity: .85; font-size: .85rem; }
+.pasaporte-sello { font-size: .78rem; text-transform: uppercase; letter-spacing: 1.5px; opacity: .85; }
+.pasaporte-qr { background: #fff; padding: .5rem .5rem .25rem; border-radius: 10px; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: .15rem; }
+.pasaporte-qr small { color: #0d3b2e; font-size: .65rem; text-transform: uppercase; letter-spacing: 1px; }
+
+.pasaporte-ficha { display: grid; grid-template-columns: auto 1fr 260px; gap: 1.5rem; padding: 1.5rem 1.75rem; align-items: start; }
+.pasaporte-foto { width: 110px; height: 110px; border-radius: 22px; font-size: 3.2rem; }
+.pasaporte-datos h2 { font-weight: 800; font-size: 1.8rem; margin-bottom: .6rem; }
+.pasaporte-datos dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem 1.2rem; margin: 0; }
+.pasaporte-datos dt { font-size: .7rem; text-transform: uppercase; color: var(--pet-muted); letter-spacing: .5px; font-weight: 600; }
+.pasaporte-datos dd { margin: 0; font-weight: 600; }
+.pasaporte-dueno { background: var(--pet-surface-2); border: 1px solid var(--pet-border); border-radius: 12px; padding: 1rem; }
+.pasaporte-dueno h3 { font-size: .75rem; text-transform: uppercase; letter-spacing: .6px; color: var(--pet-muted); margin-bottom: .5rem; }
+
+.pasaporte-estado { display: flex; gap: 1rem; align-items: center; margin: 0 1.75rem; padding: .9rem 1.2rem; border-radius: 12px; }
+.pasaporte-estado > i { font-size: 1.6rem; }
+.estado-general-AL_DIA { background: rgba(39,174,96,.12); color: #1e8449; }
+.estado-general-PROXIMA { background: rgba(230,126,34,.14); color: #b9600f; }
+.estado-general-VENCIDA { background: rgba(231,76,60,.13); color: #c0392b; }
+.estado-general-SIN_REGISTROS { background: var(--pet-surface-2); color: var(--pet-muted); }
+[data-bs-theme='dark'] .estado-general-AL_DIA { color: #6fdc9a; }
+[data-bs-theme='dark'] .estado-general-PROXIMA { color: #ffb36b; }
+[data-bs-theme='dark'] .estado-general-VENCIDA { color: #ff8a7d; }
+
+.pasaporte-seccion { padding: 1.5rem 1.75rem 0; }
+.pasaporte-seccion h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: .8rem; }
+.pasaporte-seccion h3 i { color: var(--pet-primary); margin-right: .35rem; }
+.pasaporte-pie { margin-top: 1.25rem; padding: .9rem 1.75rem; border-top: 1px dashed var(--pet-border); color: var(--pet-muted); font-size: .75rem; text-align: center; }
+
+@media (max-width: 900px) {
+  .pasaporte-ficha { grid-template-columns: auto 1fr; }
+  .pasaporte-dueno { grid-column: 1 / -1; }
+  .pasaporte-datos dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 576px) {
+  .pasaporte-ficha { grid-template-columns: 1fr; }
+  .pasaporte-foto { width: 80px; height: 80px; font-size: 2.3rem; }
+  .section-card { padding: 1.1rem 1rem; }
+  .barra-fila { grid-template-columns: 105px 1fr 28px; }
+  .rango-fechas input { width: 132px; }
+  .kpi-grid { grid-template-columns: 1fr 1fr; gap: .6rem; }
+  .kpi { flex-direction: column; align-items: flex-start; gap: .5rem; padding: .9rem; }
+  .kpi-icono { width: 40px; height: 40px; font-size: 1.1rem; }
+  .bienvenida { padding: 1.25rem; }
+  .bienvenida-titulo { font-size: 1.35rem; }
+  .linea-tiempo.compacta li { flex-direction: column; gap: 0; }
+}
+
+/* ---------- Calendario ---------- */
+.calendario-cabecera { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .75rem; margin-bottom: .75rem; }
+.calendario-leyenda { display: flex; gap: 1rem; flex-wrap: wrap; font-size: .8rem; color: var(--pet-muted); margin-bottom: .75rem; }
+.calendario-leyenda .punto { margin: 0 .3rem 0 0; vertical-align: middle; }
+.calendario { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-dia-semana { text-align: center; font-size: .75rem; font-weight: 700; color: var(--pet-muted); padding: .3rem 0; text-transform: uppercase; }
+.cal-celda {
+  aspect-ratio: 1 / 0.85; min-height: 54px; border: 1px solid var(--pet-border); border-radius: 10px;
+  background: var(--pet-surface); color: var(--pet-text); padding: .35rem .45rem;
+  display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; text-align: left;
+}
+.cal-celda:hover { border-color: var(--pet-primary-light); background: var(--pet-hover); }
+.cal-celda.fuera { opacity: .4; }
+.cal-celda.hoy .cal-numero { background: var(--pet-primary); color: #fff; border-radius: 50%; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; }
+.cal-celda.seleccionada { border: 2px solid var(--pet-primary); background: rgba(22,160,133,.08); }
+.cal-numero { font-weight: 600; font-size: .9rem; }
+.cal-marcas { display: flex; gap: 3px; align-items: center; }
+.cal-marcas .punto { margin: 0; width: 8px; height: 8px; }
+.cal-marcas small { font-size: .65rem; color: var(--pet-muted); margin-left: 2px; }
+.detalle-dia li { display: flex; gap: .75rem; padding: .6rem; border-radius: 10px; margin-bottom: .5rem; background: var(--pet-surface-2); border-left: 4px solid var(--verde); }
+.detalle-dia li > i { color: var(--pet-muted); margin-top: .2rem; }
+.detalle-dia .marca-programada { border-left-color: var(--naranja); }
+.detalle-dia .marca-vencida { border-left-color: var(--rojo); }
+.proximas-lista li { display: flex; gap: .75rem; align-items: center; padding: .4rem 0; border-bottom: 1px solid var(--pet-border); }
+.fecha-mini { display: inline-block; min-width: 62px; text-align: center; background: rgba(230,126,34,.14); color: #b9600f; border-radius: 6px; font-size: .78rem; font-weight: 700; padding: .15rem .3rem; }
+
+/* ---------- Perfil ---------- */
+.datos-sesion { display: grid; grid-template-columns: auto 1fr; gap: .3rem 1rem; }
+.datos-sesion dt { color: var(--pet-muted); font-weight: 500; }
+.datos-sesion dd { margin: 0; }
+.tabla-permisos tbody .rol-actual { background: rgba(22,160,133,.1) !important; }
+.tabla-permisos thead .rol-actual { background: #0b4f3c !important; box-shadow: inset 0 -3px 0 #58d68d; }
+
+/* ---------- Impresion (pasaporte en PDF) ---------- */
+@media print {
+  @page { margin: 12mm; }
+  body { background: #fff !important; color: #000 !important; }
+  .no-print, .navbar-pet, .pie { display: none !important; }
+  .page-container { margin: 0; max-width: none; padding: 0; min-height: 0; }
+  .pasaporte { box-shadow: none; border: 1px solid #ccc; }
+  .pasaporte-cabecera, .lt-marca, .estado-badge, .pasaporte-estado, .badge-tipo, .pasaporte-foto {
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .linea-tiempo > li { break-inside: avoid; }
+  .pasaporte-ficha { grid-template-columns: auto 1fr 240px; }
+}
